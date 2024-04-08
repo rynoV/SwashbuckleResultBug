@@ -80,8 +80,15 @@ let main args =
     if app.Environment.IsDevelopment() then
         app.UseSwagger().UseSwaggerUI() |> ignore
 
-    app.MapGet("/", Func<_>(get)) |> ignore
-    app.MapGet("/sub", Func<_>(get2)) |> ignore
+    app
+        .MapGet("/", Func<_>(get))
+        .Produces<Result<unit, unit>>(StatusCodes.Status200OK, "application/json")
+    |> ignore
+
+    app
+        .MapGet("/sub", Func<_>(get2))
+        .Produces<Result<unit, unit>>(StatusCodes.Status200OK, "application/json")
+    |> ignore
 
     app.Run()
 
