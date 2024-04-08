@@ -55,15 +55,15 @@ Microsoft.AspNetCore.Diagnostics.DeveloperExceptionPageMiddleware[1]
          at Microsoft.AspNetCore.Diagnostics.DeveloperExceptionPageMiddleware.Invoke(HttpContext context)
 *)
 
-let get () = Result<int, string>.Error "test"
+let get () = Option<int>.None
 
-let get2 () = Result<string, string>.Error "test"
+let get2 () = Option<string>.None
 
 [<EntryPoint>]
 let main args =
     let builder = WebApplication.CreateBuilder(args)
 
-    let jsonFSharpOptions = JsonFSharpOptions(JsonUnionEncoding.FSharpLuLike)
+    let jsonFSharpOptions = JsonFSharpOptions(JsonUnionEncoding.NewtonsoftLike)
 
     builder.Services
         .Configure(fun (opt: JsonOptions) ->
@@ -82,12 +82,12 @@ let main args =
 
     app
         .MapGet("/", Func<_>(get))
-        .Produces<Result<unit, unit>>(StatusCodes.Status200OK, "application/json")
+        // .Produces<Result<unit, unit>>(StatusCodes.Status200OK, "application/json")
     |> ignore
 
     app
         .MapGet("/sub", Func<_>(get2))
-        .Produces<Result<unit, unit>>(StatusCodes.Status200OK, "application/json")
+        // .Produces<Result<unit, unit>>(StatusCodes.Status200OK, "application/json")
     |> ignore
 
     app.Run()
